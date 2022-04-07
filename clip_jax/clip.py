@@ -2,7 +2,7 @@ import hashlib
 import os
 import urllib
 import warnings
-from typing import Union, List
+from typing import Union, List, Mapping
 
 import jax
 import haiku as hk
@@ -10,7 +10,6 @@ import jax.numpy as jnp
 import numpy as np
 import torch
 from PIL import Image
-from haiku._src.data_structures import FlatMapping
 from torchvision.transforms import Compose, Resize, CenterCrop, ToTensor, Normalize
 from tqdm import tqdm
 
@@ -81,7 +80,7 @@ def convert_params(torch_state, jax_params):
     def name_iter(pytree, root, f):
         new_out = {}
         for k, v in pytree.items():
-            if isinstance(v, FlatMapping):
+            if isinstance(v, Mapping):
                 new_out[k] = name_iter(v, root + "/" + k, f)
             else:
                 new_out[k] = f(v, root + "/" + k)
